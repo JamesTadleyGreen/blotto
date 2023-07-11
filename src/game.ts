@@ -1,8 +1,9 @@
 import * as Phaser from 'phaser';
 import { createAligned } from './parallax'
+import movePlayer from './player'
 
-let keys = null
-let player = null
+let players = null
+let enemies = null
 
 export default class Demo extends Phaser.Scene {
     constructor() {
@@ -10,7 +11,10 @@ export default class Demo extends Phaser.Scene {
     }
 
     preload() {
-        this.load.spritesheet('player', "/assets/Character/Player/_Run.png", { frameWidth: 120, frameHeight: 80 });
+        this.load.spritesheet('playerRun', "/assets/Character/Player/_Run.png", { frameWidth: 120, frameHeight: 80 });
+        this.load.spritesheet('playerIdle', "/assets/Character/Player/_Idle.png", { frameWidth: 120, frameHeight: 80 });
+        this.load.spritesheet('playerAttack', "/assets/Character/Player/_Attack.png", { frameWidth: 120, frameHeight: 80 });
+        this.load.spritesheet('playerDeath', "/assets/Character/Player/_Death.png", { frameWidth: 120, frameHeight: 80 });
         this.load.image('cloud', '/assets/Background/cloud.png')
         this.load.image('mountain', '/assets/Background/mountain.png')
         this.load.image('pine1', '/assets/Background/pine1.png')
@@ -18,7 +22,6 @@ export default class Demo extends Phaser.Scene {
         this.load.image('sky', '/assets/Background/sky.png')
     }
     create() {
-        keys = this.input.keyboard.addKeys("W,S,D,A");
         const width = this.scale.width
         const height = this.scale.height
         const totalWidth = width * 15
@@ -32,23 +35,38 @@ export default class Demo extends Phaser.Scene {
 
         this.anims.create({
             key: 'walk',
-            frames: this.anims.generateFrameNumbers('player'),
+            frames: this.anims.generateFrameNumbers('playerRun'),
             frameRate: 16
         });
 
-        player = this.add.sprite(250, 300, 'player').setScale(2);
-
-        player.play({ key: 'walk', repeat: -1 });
-
-        this.tweens.add({
-            targets: player,
-            x: 7500,
-            duration: 18800,
-            ease: 'Linear'
+        this.anims.create({
+            key: 'idle',
+            frames: this.anims.generateFrameNumbers('playerIdle'),
+            frameRate: 16
         });
 
+        this.anims.create({
+            key: 'attack',
+            frames: this.anims.generateFrameNumbers('playerAttack'),
+            frameRate: 16
+        });
+
+        this.anims.create({
+            key: 'death',
+            frames: this.anims.generateFrameNumbers('playerDeath'),
+            frameRate: 16
+        });
+
+        players = [];
+        for (let i = 0; i < 60; i++) {
+            players.push(this.add.sprite(-50 - i, 320, 'playerRun').setScale(2));
+        }
+        const num_rows = Math.floor(players.length / 3) + 1
+        const y_movement = Math.min(Math.floor(100 / players.length), 30)
+        players.map((player, index) => { movePlayer(this.tweens, player, 750 + (index % num_rows) * 20, player.y + index * y_movement - players.length * y_movement, 2000) })
+
         this.cameras.main.setBounds(0, 0, totalWidth, height);
-        this.cameras.main.startFollow(player, true, 0.08, 0);
+        this.cameras.main.startFollow(players[players.length - 1], true, 0.08, 0);
 
     }
 
