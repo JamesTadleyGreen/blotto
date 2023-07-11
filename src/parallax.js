@@ -1,4 +1,4 @@
-export function createAligned(scene, totalWidth, texture, scrollFactor, height) {
+const createAligned = (scene, totalWidth, texture, scrollFactor, height) => {
     const w = scene.textures.get(texture).getSourceImage().width
     const count = Math.ceil(totalWidth / w) * scrollFactor
 
@@ -11,3 +11,5 @@ export function createAligned(scene, totalWidth, texture, scrollFactor, height) 
         x += m.width
     }
 }
+
+export default createAligned

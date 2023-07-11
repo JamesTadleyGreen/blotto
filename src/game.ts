@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
-import { createAligned } from './parallax'
-import movePlayer from './player'
+import createAligned from './parallax'
+import * as Player from './player'
 
 let players = null
 let enemies = null
@@ -15,6 +15,7 @@ export default class Demo extends Phaser.Scene {
         this.load.spritesheet('playerIdle', "/assets/Character/Player/_Idle.png", { frameWidth: 120, frameHeight: 80 });
         this.load.spritesheet('playerAttack', "/assets/Character/Player/_Attack.png", { frameWidth: 120, frameHeight: 80 });
         this.load.spritesheet('playerDeath', "/assets/Character/Player/_Death.png", { frameWidth: 120, frameHeight: 80 });
+        this.load.spritesheet('enemyIdle', "/assets/Character/Enemy/_Idle.png", { frameWidth: 120, frameHeight: 80 });
         this.load.image('cloud', '/assets/Background/cloud.png')
         this.load.image('mountain', '/assets/Background/mountain.png')
         this.load.image('pine1', '/assets/Background/pine1.png')
@@ -57,13 +58,16 @@ export default class Demo extends Phaser.Scene {
             frameRate: 16
         });
 
-        players = [];
-        for (let i = 0; i < 60; i++) {
-            players.push(this.add.sprite(-50 - i, 320, 'playerRun').setScale(2));
-        }
-        const num_rows = Math.floor(players.length / 3) + 1
-        const y_movement = Math.min(Math.floor(100 / players.length), 30)
-        players.map((player, index) => { movePlayer(this.tweens, player, 750 + (index % num_rows) * 20, player.y + index * y_movement - players.length * y_movement, 2000) })
+        this.anims.create({
+            key: 'enemyIdle',
+            frames: this.anims.generateFrameNumbers('enemyIdle'),
+            frameRate: 16
+        });
+
+
+        const playerArray = [[750, 300], [715, 310]]
+        players = Player.setupPlayers(this, players, playerArray, 1000);
+        enemies = Player.setupEnemies(this, enemies, playerArray);
 
         this.cameras.main.setBounds(0, 0, totalWidth, height);
         this.cameras.main.startFollow(players[players.length - 1], true, 0.08, 0);
