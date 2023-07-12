@@ -35,15 +35,26 @@ const setupEnemies = (demo, enemies, positionList: number[][]) => {
     return enemies
 }
 
-const attack = (players, enemies, survivingPlayerCount: number) => {
-    players.map((player) => player.play({ key: 'playerAttack', repeat: 1 }))
-    enemies.map((enemy) => enemy.play({ key: 'enemyAttack', repeat: 1 }))
+const die = (players, enemies, survivingPlayerCount: number) => {
     if (survivingPlayerCount >= 0) {
-        enemies.map((enemy) => enemy.play({ key: 'enemyDeath', repeat: 1 }))
-        players.slice(0, players.length - survivingPlayerCount - 1).map((player) => player.play({ key: 'playerDeath', repeat: 1 }))
-
+        enemies.map((enemy) => enemy.play({ key: 'enemyDeath', repeat: 0 }))
+        players.slice(0, players.length - survivingPlayerCount).map((player) => player.play({ key: 'playerDeath', repeat: 0 }))
     }
+    else {
+        players.map((player) => player.play({ key: 'playerDeath', repeat: 0 }))
+        enemies.slice(0, enemies.length - survivingPlayerCount).map((enemy) => enemy.play({ key: 'enemyDeath', repeat: 0 }))
+    }
+
 }
+
+const attack = (players, enemies, survivingPlayerCount: number) => {
+    players.map((player) => player.play({ key: 'playerAttack', repeat: 0 }))
+    enemies.map((enemy) => enemy.play({ key: 'enemyAttack', repeat: 0 }))
+    // TODO fix this animation triggers immediately
+    players[0].once('animationcomplete', die(players, enemies, survivingPlayerCount))
+
+}
+
 
 const runAttackScene = (demo, players, numOfPlayers, enemies, numOfEnemies, positionList) => {
     demo.canTween = false
@@ -51,7 +62,7 @@ const runAttackScene = (demo, players, numOfPlayers, enemies, numOfEnemies, posi
     enemies = setupEnemies(demo, enemies, positionList.slice(0, numOfEnemies))
     players = setupPlayers(demo, players, positionList.slice(0, numOfPlayers), 1000, duration)
     demo.cameras.main.startFollow(players[players.length - 1], true, 0.08, 0);
-    attack(players, enemies, numOfPlayers)
+    setTimeout(() => { attack(players, enemies, numOfPlayers - numOfEnemies) }, 2000)
 }
 
 

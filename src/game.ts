@@ -46,8 +46,11 @@ export default class Demo extends Phaser.Scene {
 
         this.cameras.main.setBounds(0, 0, totalWidth, height);
 
-        const playerArray = [[1750, 300], [1715, 310]]
-        players = Player.runAttackScene(this, players, 2, enemies, 1, playerArray)
+        const playerArray = []
+        for (let i = 0; i < 10; i++) {
+            playerArray.push([750 + i * 20, 310])
+        }
+        players = Player.runAttackScene(this, players, 3, enemies, 0, playerArray)
 
 
     }
