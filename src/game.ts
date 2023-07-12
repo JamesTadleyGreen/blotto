@@ -16,6 +16,8 @@ export default class Demo extends Phaser.Scene {
         this.load.spritesheet('playerAttack', "/assets/Character/Player/_Attack.png", { frameWidth: 120, frameHeight: 80 });
         this.load.spritesheet('playerDeath', "/assets/Character/Player/_Death.png", { frameWidth: 120, frameHeight: 80 });
         this.load.spritesheet('enemyIdle', "/assets/Character/Enemy/_Idle.png", { frameWidth: 120, frameHeight: 80 });
+        this.load.spritesheet('enemyAttack', "/assets/Character/Enemy/_Attack.png", { frameWidth: 120, frameHeight: 80 });
+        this.load.spritesheet('enemyDeath', "/assets/Character/Enemy/_Death.png", { frameWidth: 120, frameHeight: 80 });
         this.load.image('cloud', '/assets/Background/cloud.png')
         this.load.image('mountain', '/assets/Background/mountain.png')
         this.load.image('pine1', '/assets/Background/pine1.png')
@@ -33,41 +35,18 @@ export default class Demo extends Phaser.Scene {
         createAligned(this, totalWidth, 'pine2', 0.35, 1.5)
         createAligned(this, totalWidth, 'pine1', 0.45, 1.45)
 
-
-        this.anims.create({
-            key: 'walk',
-            frames: this.anims.generateFrameNumbers('playerRun'),
-            frameRate: 16
-        });
-
-        this.anims.create({
-            key: 'idle',
-            frames: this.anims.generateFrameNumbers('playerIdle'),
-            frameRate: 16
-        });
-
-        this.anims.create({
-            key: 'attack',
-            frames: this.anims.generateFrameNumbers('playerAttack'),
-            frameRate: 16
-        });
-
-        this.anims.create({
-            key: 'death',
-            frames: this.anims.generateFrameNumbers('playerDeath'),
-            frameRate: 16
-        });
-
-        this.anims.create({
-            key: 'enemyIdle',
-            frames: this.anims.generateFrameNumbers('enemyIdle'),
-            frameRate: 16
-        });
+        const playerAndEnemyAnimations = ['playerRun', 'playerIdle', 'playerAttack', 'playerDeath', 'enemyIdle', 'enemyAttack', 'enemyDeath']
+        playerAndEnemyAnimations.forEach((key) => {
+            this.anims.create({
+                key: key,
+                frames: this.anims.generateFrameNumbers(key),
+                frameRate: 16
+            })
+        })
 
 
-        const playerArray = [[750, 300], [715, 310]]
-        players = Player.setupPlayers(this, players, playerArray, 1000);
-        enemies = Player.setupEnemies(this, enemies, playerArray);
+        const playerArray = [[1750, 300], [1715, 310]]
+        players = Player.runAttackScene(this, players, 2, enemies, 1, playerArray)
 
         this.cameras.main.setBounds(0, 0, totalWidth, height);
         this.cameras.main.startFollow(players[players.length - 1], true, 0.08, 0);
