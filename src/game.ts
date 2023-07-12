@@ -44,12 +44,11 @@ export default class Demo extends Phaser.Scene {
             })
         })
 
+        this.cameras.main.setBounds(0, 0, totalWidth, height);
 
         const playerArray = [[1750, 300], [1715, 310]]
         players = Player.runAttackScene(this, players, 2, enemies, 1, playerArray)
 
-        this.cameras.main.setBounds(0, 0, totalWidth, height);
-        this.cameras.main.startFollow(players[players.length - 1], true, 0.08, 0);
 
     }
 
