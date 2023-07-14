@@ -38,7 +38,7 @@ class AttackCutScene extends Phaser.Scene {
         const height = this.scale.height
         const totalWidth = width * 15
 
-        Parallax.createAligned(this, totalWidth, 'sky', 0.15, 1.9)
+        Parallax.createAligned(this, totalWidth, 'sky', 0.10, 1.9)
         Parallax.createAligned(this, totalWidth, 'cloud', 0.15, 2.9)
         Parallax.createAligned(this, totalWidth, 'mountain', 0.2, 2.5)
         Parallax.createAligned(this, totalWidth, 'pine2', 0.35, 1.5)
@@ -57,9 +57,9 @@ class AttackCutScene extends Phaser.Scene {
 
         const playerArray = []
         for (let i = 0; i < 10; i++) {
-            playerArray.push([750 + i * 20, 310])
+            playerArray.push([1750 + i * 20, 310])
         }
-        players = Player.runAttackScene(this, players, 3, enemies, 0, playerArray)
+        players = Player.runAttackScene(this, players, 5, enemies, 5, playerArray)
 
 
     }

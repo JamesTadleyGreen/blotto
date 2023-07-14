@@ -58,11 +58,11 @@ const attack = (players, enemies, survivingPlayerCount: number) => {
 
 const runAttackScene = (demo, players, numOfPlayers, enemies, numOfEnemies, positionList) => {
     demo.canTween = false
-    const duration = 2000
+    const duration = 3000
     enemies = setupEnemies(demo, enemies, positionList.slice(0, numOfEnemies))
     players = setupPlayers(demo, players, positionList.slice(0, numOfPlayers), 1000, duration)
     demo.cameras.main.startFollow(players[players.length - 1], true, 0.08, 0);
-    setTimeout(() => { attack(players, enemies, numOfPlayers - numOfEnemies) }, 2000)
+    setTimeout(() => { attack(players, enemies, numOfPlayers - numOfEnemies) }, duration)
 }
 
 
