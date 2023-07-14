@@ -12,4 +12,4 @@ const createAligned = (scene, totalWidth, texture, scrollFactor, height) => {
     }
 }
 
-export default createAligned
+export { createAligned }
